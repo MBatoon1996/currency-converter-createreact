@@ -24,9 +24,8 @@ class RateGetter extends React.Component {
     }
     handleSubmit(event) {
         event.preventDefault();
-        console.log("Base is " + this.state.base);
-        console.log("Conv is " + this.state.conv);
-        fetch(`https://api.exchangeratesapi.io/latest?base=${base}`)
+        let{ base, conv } = this.state;
+        fetch(`GET https://api.exchangeratesapi.io/latest?base=${base}`)
         .then(checkStatus)
         .then(json)
         .then(data => {
