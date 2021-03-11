@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { json, checkStatus } from './utils';
 
-export default function Home() {
-    return (
-        <div className="container">
+class RateGetter extends React.Component {
+    render() {
+        return(
+            <div className="container">
             <form>
                 <div className="form-row">
                     <div className="form-group col-12 col-md-7">
@@ -38,5 +39,7 @@ export default function Home() {
                 </div>
             </form>
         </div>
-    )
+        )
+    }
 }
+export default RateGetter;
