@@ -15,10 +15,11 @@ class RateGetter extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeConv = this.handleChangeConv.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.switchRates = this.switchRates.bind(this);
+        
     }
     handleChange(event) {
         this.setState({ base: event.target.value });
-        console.log(event.target.value);
     }
     handleChangeConv(event) {
         this.setState({ conv: event.target.value });
@@ -30,10 +31,11 @@ class RateGetter extends React.Component {
         .then(checkStatus)
         .then(json)
         .then(data => {
-            console.log(data);
             if (data.rates) {
                 console.log(data);
                 this.setState({ rates: data.rates, error: ''});
+                console.log(this.state.rates);
+                console.log(this.state.rates.JPY);
             }
         })
         .catch((error) => {
@@ -43,6 +45,9 @@ class RateGetter extends React.Component {
 
         console.log(base);
         console.log(this.state.conv);
+    }
+    switchRates(event){
+        console.log("Switch!");
     }
 
 
@@ -66,7 +71,9 @@ class RateGetter extends React.Component {
                             <option>HKD</option>
                             <option>EURO</option>
                         </select>
-                        <button type="button" className="btn btn-secondary d-block mt-2" id="button">Switch</button>
+
+                        <button type="button" onClick={this.switchRates} className="btn btn-secondary d-block mt-2" id="button">Switch</button>
+
                         <label htmlFor="convCurrency">To</label>
                         <select value={conv} onChange={this.handleChangeConv} className="form-control" id="convCurrency">
                             <option>JPY</option>
