@@ -53,6 +53,11 @@ class RateGetter extends React.Component {
     }
     switchRates(event){
         console.log("Switch!");
+        let temp = this.state.base;
+        this.setState({
+            base: this.state.conv,
+            conv: temp
+        });
     }
 
 
@@ -80,8 +85,8 @@ class RateGetter extends React.Component {
 
                         <label htmlFor="convCurrency">To</label>
                         <select value={conv} onChange={this.handleChangeConv} className="form-control" id="convCurrency">
-                            <option>JPY</option>
                             <option>USD</option>
+                            <option>JPY</option>
                             <option>CAD</option>
                             <option>HKD</option>
                             <option>SGD</option>
