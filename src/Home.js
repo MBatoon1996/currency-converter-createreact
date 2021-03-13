@@ -10,6 +10,8 @@ class RateGetter extends React.Component {
             conv: 'JPY',
             amount: '0',
             rates: [],
+            conversion: '',
+            convString: '',
             error: '',
         };
         this.handleChange = this.handleChange.bind(this);
@@ -37,22 +39,23 @@ class RateGetter extends React.Component {
         .then(data => {
             if (data.rates) {
                 console.log(data);
-                this.setState({ rates: data.rates, error: ''});
+                this.setState({ 
+                    rates: data.rates, 
+                    conversion: amount * this.state.rates[this.state.conv] + ' ' + conv,
+                    convString: amount + ' ' + base + ' with conversion rate of ' + this.state.rates[this.state.conv] + ' is:',
+                    error: ''
+                });
                 console.log(this.state.rates);
-                console.log(this.state.rates.JPY);
+                console.log(this.state.rates[this.state.conv]);
             }
         })
         .catch((error) => {
             this.setState({ error: error.message });
             console.log(error);
         })
-
-        console.log(base);
-        console.log(this.state.conv);
-        console.log(amount);
     }
     switchRates(event){
-        console.log("Switch!");
+        console.log("Switching " + this.state.base + " and " + this.state.conv);
         let temp = this.state.base;
         this.setState({
             base: this.state.conv,
@@ -62,7 +65,7 @@ class RateGetter extends React.Component {
 
 
     render() {
-        const {base, conv, amount, rates, error} = this.state;
+        const {base, conv, amount, rates, conversion, convString, error} = this.state;
         return(
             <div className="container">
             <form onSubmit={this.handleSubmit}>
@@ -79,6 +82,7 @@ class RateGetter extends React.Component {
                             <option>CAD</option>
                             <option>HKD</option>
                             <option>SGD</option>
+                            <option>KRW</option>
                         </select>
 
                         <button type="button" onClick={this.switchRates} className="btn btn-secondary d-block mt-2" id="button">Switch</button>
@@ -90,13 +94,16 @@ class RateGetter extends React.Component {
                             <option>CAD</option>
                             <option>HKD</option>
                             <option>SGD</option>
+                            <option>KRW</option>
                         </select>
                     </div>
                 </div>
                 <div className="d-flex justify-content-center">
-                    <button type="submit" className="btn btn-primary d-inline btn-lg" id="convertButton">Convert</button>
+                    <button type="submit" className="btn btn-primary d-inline btn-lg mb-3" id="convertButton">Convert</button>
                 </div>
             </form>
+            <p>{convString}</p>
+            <h2>{conversion}</h2>
         </div>
         )
     }
