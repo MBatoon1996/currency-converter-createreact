@@ -8,12 +8,13 @@ class RateGetter extends React.Component {
         this.state={
             base: 'USD',
             conv: 'JPY',
-            amount: '',
+            amount: '0',
             rates: [],
             error: '',
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeConv = this.handleChangeConv.bind(this);
+        this.handleChangeAmount = this.handleChangeAmount.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.switchRates = this.switchRates.bind(this);
         
@@ -24,9 +25,12 @@ class RateGetter extends React.Component {
     handleChangeConv(event) {
         this.setState({ conv: event.target.value });
     }
+    handleChangeAmount(event) {
+        this.setState({ amount: event.target.value });
+    }
     handleSubmit(event) {
         event.preventDefault();
-        let{ base, conv } = this.state;
+        let{ base, conv, amount } = this.state;
         fetch(`https://api.exchangeratesapi.io/latest?base=${base}`)
         .then(checkStatus)
         .then(json)
@@ -45,6 +49,7 @@ class RateGetter extends React.Component {
 
         console.log(base);
         console.log(this.state.conv);
+        console.log(amount);
     }
     switchRates(event){
         console.log("Switch!");
@@ -53,23 +58,22 @@ class RateGetter extends React.Component {
 
     render() {
         const {base, conv, amount, rates, error} = this.state;
-        console.log(base);
         return(
             <div className="container">
             <form onSubmit={this.handleSubmit}>
                 <div className="form-row">
                     <div className="form-group col-12 col-md-6">
                         <label htmlFor="amount">Amount</label>
-                        <input type="number" step="0.01" className="form-control" id="amount" placeholder="0.0"></input> {/* add onChange={this.handleChangeAmount} */}
+                        <input type="number" step="0.01" onChange={this.handleChangeAmount} className="form-control" id="amount" placeholder="0.0"></input>
                     </div>
                     <div className="form-group col-12 col-md-6">
                         <label htmlFor="baseCurrency">From</label>
                         <select value={base} onChange={this.handleChange} className="form-control" id="baseCurrency">
                             <option>USD</option>
                             <option>JPY</option>
-                            <option>TWD</option>
+                            <option>CAD</option>
                             <option>HKD</option>
-                            <option>EURO</option>
+                            <option>SGD</option>
                         </select>
 
                         <button type="button" onClick={this.switchRates} className="btn btn-secondary d-block mt-2" id="button">Switch</button>
@@ -78,9 +82,9 @@ class RateGetter extends React.Component {
                         <select value={conv} onChange={this.handleChangeConv} className="form-control" id="convCurrency">
                             <option>JPY</option>
                             <option>USD</option>
-                            <option>TWD</option>
+                            <option>CAD</option>
                             <option>HKD</option>
-                            <option>EURO</option>
+                            <option>SGD</option>
                         </select>
                     </div>
                 </div>
