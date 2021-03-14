@@ -14,6 +14,9 @@ class RateGetter extends React.Component {
             convString: '',
             error: '',
         };
+
+        
+
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeConv = this.handleChangeConv.bind(this);
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
@@ -41,7 +44,7 @@ class RateGetter extends React.Component {
                 console.log(data);
                 this.setState({ 
                     rates: data.rates, 
-                    conversion: amount * this.state.rates[this.state.conv] + ' ' + conv,
+                    conversion: amount * data.rates[this.state.conv] + ' ' + conv,
                     convString: amount + ' ' + base + ' with conversion rate of ' + this.state.rates[this.state.conv] + ' is:',
                     error: ''
                 });
