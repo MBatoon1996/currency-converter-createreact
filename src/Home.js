@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { json, checkStatus } from './utils';
+import TableRow from './TableRow';
 
 class RateGetter extends React.Component {
     constructor(props) {
@@ -45,7 +46,7 @@ class RateGetter extends React.Component {
                 this.setState({ 
                     rates: data.rates, 
                     conversion: amount * data.rates[this.state.conv] + ' ' + conv,
-                    convString: amount + ' ' + base + ' with conversion rate of ' + this.state.rates[this.state.conv] + ' is:',
+                    convString: amount + ' ' + base + ' with conversion rate of ' + data.rates[this.state.conv] + ' is:',
                     error: ''
                 });
                 console.log(this.state.rates);
@@ -106,7 +107,18 @@ class RateGetter extends React.Component {
                 </div>
             </form>
             <p>{convString}</p>
-            <h2>{conversion}</h2>
+            <h2 className="mb-3">{conversion}</h2>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Currency</th>
+                        <th scope="col">Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <TableRow  base={ base } amount={ rates[{base}] }/>
+                </tbody>
+            </table>
         </div>
         )
     }
