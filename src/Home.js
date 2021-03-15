@@ -38,7 +38,7 @@ class RateGetter extends React.Component {
                 if (data.rates) {
                     console.log(data);
                     this.setState({ 
-                        rates: data.rates, 
+                        rates: data.rates,
                         conversion: amount * data.rates[this.state.conv] + ' ' + conv,
                         convString: amount + ' ' + base + ' with conversion rate of ' + data.rates[this.state.conv] + ' is:',
                         error: ''
@@ -118,7 +118,7 @@ class RateGetter extends React.Component {
             </form>
             <p>{convString}</p>
             <h2 className="mb-3">{conversion}</h2>
-            <table className="table">
+            <table className="table mt-5">
                 <thead>
                     <tr>
                         <th scope="col">Currency</th>
@@ -126,7 +126,12 @@ class RateGetter extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    <TableRow base={ base } amount={ 1 }/>
+                    <TableRow base={ "USD" } amount={ rates.USD }/>
+                    <TableRow base={ "JPY" } amount={ rates.JPY }/>
+                    <TableRow base={ "CAD" } amount={ rates.CAD }/>
+                    <TableRow base={ "HKD" } amount={ rates.HKD }/>
+                    <TableRow base={ "SGD" } amount={ rates.SGD }/>
+                    <TableRow base={ "KRW" } amount={ rates.KRW }/>
                 </tbody>
             </table>
         </div>
