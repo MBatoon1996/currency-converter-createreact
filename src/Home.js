@@ -116,7 +116,8 @@ class RateGetter extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    <TableRow  base={ base } amount={ rates[{base}] }/>
+                    <TableRow  base={ base } amount={ 1 }/>
+                    
                 </tbody>
             </table>
         </div>
