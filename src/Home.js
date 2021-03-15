@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { json, checkStatus } from './utils';
 import TableRow from './TableRow';
 
+
 class RateGetter extends React.Component {
     constructor(props) {
         super(props);
@@ -25,6 +26,35 @@ class RateGetter extends React.Component {
         this.switchRates = this.switchRates.bind(this);
         
     }
+    componentDidMount(){
+        this.calculate();
+    }
+    calculate = () => {
+        let{ base, conv, amount } = this.state;
+            fetch(`https://api.exchangeratesapi.io/latest?base=${base}`)
+            .then(checkStatus)
+            .then(json)
+            .then(data => {
+                if (data.rates) {
+                    console.log(data);
+                    this.setState({ 
+                        rates: data.rates, 
+                        conversion: amount * data.rates[this.state.conv] + ' ' + conv,
+                        convString: amount + ' ' + base + ' with conversion rate of ' + data.rates[this.state.conv] + ' is:',
+                        error: ''
+                    });
+                    console.log(this.state.rates);
+                    console.log(this.state.rates[this.state.conv]);
+                }
+            })
+            .catch((error) => {
+                this.setState({ error: error.message });
+                console.log(error);
+            })
+    };
+    conponentDidMount(){
+        this.calculate();
+    }
     handleChange(event) {
         this.setState({ base: event.target.value });
     }
@@ -36,27 +66,7 @@ class RateGetter extends React.Component {
     }
     handleSubmit(event) {
         event.preventDefault();
-        let{ base, conv, amount } = this.state;
-        fetch(`https://api.exchangeratesapi.io/latest?base=${base}`)
-        .then(checkStatus)
-        .then(json)
-        .then(data => {
-            if (data.rates) {
-                console.log(data);
-                this.setState({ 
-                    rates: data.rates, 
-                    conversion: amount * data.rates[this.state.conv] + ' ' + conv,
-                    convString: amount + ' ' + base + ' with conversion rate of ' + data.rates[this.state.conv] + ' is:',
-                    error: ''
-                });
-                console.log(this.state.rates);
-                console.log(this.state.rates[this.state.conv]);
-            }
-        })
-        .catch((error) => {
-            this.setState({ error: error.message });
-            console.log(error);
-        })
+        this.calculate();
     }
     switchRates(event){
         console.log("Switching " + this.state.base + " and " + this.state.conv);
@@ -116,8 +126,7 @@ class RateGetter extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    <TableRow  base={ base } amount={ 1 }/>
-                    
+                    <TableRow base={ base } amount={ 1 }/>
                 </tbody>
             </table>
         </div>
