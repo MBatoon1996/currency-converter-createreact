@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
+import Chart from 'chart.js';
 import { json, checkStatus } from './utils';
 import TableRow from './TableRow';
 
@@ -24,10 +25,14 @@ class RateGetter extends React.Component {
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.switchRates = this.switchRates.bind(this);
+
+        this.chartRef = React.createRef();
         
     }
     componentDidMount(){
+        const { base, conv } = this.state;
         this.calculate();
+        this.getHistoricalRates(base, conv);
     }
     calculate = () => {
         let{ base, conv, amount } = this.state;
@@ -52,14 +57,13 @@ class RateGetter extends React.Component {
                 console.log(error);
             })
     };
-    conponentDidMount(){
-        this.calculate();
-    }
     handleChange(event) {
         this.setState({ base: event.target.value });
+        this.getHistoricalRates(event.target.value, this.state.conv);
     }
     handleChangeConv(event) {
         this.setState({ conv: event.target.value });
+        this.getHistoricalRates(this.state.base, event.target.value);
     }
     handleChangeAmount(event) {
         this.setState({ amount: event.target.value });
@@ -75,6 +79,53 @@ class RateGetter extends React.Component {
             base: this.state.conv,
             conv: temp
         });
+    }
+
+    getHistoricalRates = (base, conv) => {
+        const endDate = new Date().toISOString().split('T')[0];
+        const startDate = new Date((new Date).getTime() - (30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0];
+
+        fetch(`https://api.exchangeratesapi.io/history?start_at=${startDate}&end_at=${endDate}&base=${base}&symbols=${conv}`)
+        .then(checkStatus)
+        .then(json)
+        .then(data => {
+            if(data.error) {
+                throw new Error(data.error);
+            }
+            const chartLabels = Object.keys(data.rates);
+            const chartData = Object.values(data.rates).map(rate => rate[conv]);
+            const chartLabel = `${base}/${conv}`;
+            this.buildChart(chartLabels, chartData, chartLabel);
+        })
+        .catch(error => console.error(error.message));
+    }
+
+    buildChart = (labels, data, label) => {
+        const chartRef = this.chartRef.current.getContext("2d");
+
+        console.log("building chart");
+
+        if(typeof this.chart !== "undefined") {
+            this.chart.destroy();
+        }
+
+        this.chart = new Chart(this.chartRef.current.getContext("2d"), {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: label,
+                        data,
+                        fill: false,
+                        tension: 0,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+            }
+        })
     }
 
 
@@ -134,6 +185,7 @@ class RateGetter extends React.Component {
                     <TableRow base={ "KRW" } amount={ rates.KRW }/>
                 </tbody>
             </table>
+            <canvas ref={this.chartRef} />
         </div>
         )
     }
